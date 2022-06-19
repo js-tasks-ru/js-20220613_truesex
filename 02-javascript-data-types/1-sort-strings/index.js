@@ -7,7 +7,7 @@
 export function sortStrings(arr, param = 'asc') {
     const arrClone = arr.slice(0);
     const sortOptions = {sensitivity: 'case', caseFirst: 'upper'};
-    const sortLocal = ['en', 'ru'];
+    const sortLocal = ['ru-RU', 'en-EN'];
     let sortOrder = 1;
     if (param === 'desc') {
         sortOptions.caseFirst = 'lower';
@@ -17,5 +17,3 @@ export function sortStrings(arr, param = 'asc') {
     return arrClone;
 }
 
-console.log(sortStrings(['абрикос', 'Абрикос', 'яблоко', 'Яблоко', 'ёжик', 'Ёжик'], 'asc'));
-console.log(sortStrings(['абрикос', 'Абрикос', 'яблоко', 'Яблоко', 'ёжик', 'Ёжик'], 'desc'));
