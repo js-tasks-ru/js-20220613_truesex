@@ -6,26 +6,11 @@
 export function createGetter(path) {
   const arr = path.split('.');
   return (obj) => {
-    let res = obj;
+    let result = obj;
     arr.every(value => {
-      try {
-        res = res[value];
-        console.log(`${value} ${res}`);
-      } catch (error) {
-        res = undefined; //может к примитивному типу обратиться по свойству
-      }
-      return res !== undefined;
+      result = result[value];
+      return result !== undefined;
     });
-    return res;
+    return result;
   }
 }
-/*
-const product = {
-  category: {
-    title: "Goods"
-  }
-}
-
-const getter = createGetter('category.title');
-
-console.log('' + getter(product) + ' ' + product); // Goods*/
