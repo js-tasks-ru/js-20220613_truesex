@@ -1,29 +1,23 @@
 export default class ColumnChart {
-  constructor(obj) {
-    if (obj) {
-      for (const [key, value] of Object.entries(obj)) {
-        this[key] = value;
-      }
-    }
+  
+  chartHeight = 50; 
 
-    if (!this.data) {
-      this.data = [];
-    }
-    
-    this.chartHeight = 50;
+  constructor(
+    { data = [], 
+      label = '',
+      value = '',
+      formatHeading = valueF => valueF } = {}) {
+
+    this.data = data;
+    this.label = label;
+    this.value = formatHeading(value);
+     
     this.render();
     this.update();
   }
 
-  formatHeading(value) {
-    return '' + value;
-  }
-
   getLinkText() {
-    if (this.link !== undefined) {
-      return `<a class="column-chart__link" href="${this.link}">View all</a>`;
-    }
-    return '';
+    return this.link !== undefined ? `<a class="column-chart__link" href="${this.link}">View all</a>` : '';
   }
 
   getTemplate() {
@@ -35,7 +29,7 @@ export default class ColumnChart {
       </div>
       <div class="column-chart__container">
         <div data-element="header" class="column-chart__header">
-          ${this.formatHeading(this.value)}
+          ${this.value}
         </div>
         <div data-element="body" class="column-chart__chart">
         </div>
@@ -68,10 +62,10 @@ export default class ColumnChart {
     const scale = this.chartHeight/maxValue;
 
     this.element.querySelector('.column-chart__container .column-chart__chart').innerHTML =
-      this.data.reduce((chartDataAcc, value) => {
-        return chartDataAcc + `
+      this.data.map(value => {
+        return `
         <div style="--value: ${Math.floor(value*scale)}" data-tooltip="${(value/maxValue*100).toFixed()}%"></div>`
-      }, '');
+      }).join('');
   }
 
   destroy() {
