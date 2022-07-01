@@ -36,10 +36,8 @@ export default class NotificationMessage {
 
     targetElement.append(this.element);
     this.timerId = setTimeout(() => {
-      //if (thisNotificationObj === NotificationMessage.curNotificationObj) {
-        NotificationMessage.curNotificationObj.destroy();
-      //}
-    }, this.duration); 
+      NotificationMessage.curNotificationObj.destroy();
+    }, this.duration);
   }
 
   remove() {

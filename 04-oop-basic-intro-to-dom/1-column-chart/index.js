@@ -6,18 +6,19 @@ export default class ColumnChart {
     { data = [], 
       label = '',
       value = '',
+      link = '',
       formatHeading = valueF => valueF } = {}) {
 
     this.data = data;
     this.label = label;
     this.value = formatHeading(value);
-     
+    this.link = link; 
     this.render();
     this.update();
   }
 
   getLinkText() {
-    return this.link !== undefined ? `<a class="column-chart__link" href="${this.link}">View all</a>` : '';
+    return this.link ? `<a class="column-chart__link" href="${this.link}">View all</a>` : '';
   }
 
   getTemplate() {
