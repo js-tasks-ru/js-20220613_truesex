@@ -35,11 +35,11 @@ export default class NotificationMessage {
     NotificationMessage.curNotificationObj = this;
 
     targetElement.append(this.element);
-    setTimeout(thisNotificationObj => {
-      if (thisNotificationObj === NotificationMessage.curNotificationObj) {
-        thisNotificationObj.destroy();
-      }
-    }, this.duration, this); 
+    this.timerId = setTimeout(() => {
+      //if (thisNotificationObj === NotificationMessage.curNotificationObj) {
+        NotificationMessage.curNotificationObj.destroy();
+      //}
+    }, this.duration); 
   }
 
   remove() {
@@ -50,6 +50,7 @@ export default class NotificationMessage {
 
   destroy() {
     this.remove();
+    clearTimeout(this.timerId);
     this.element = null;
     NotificationMessage.curNotificationObj = null;
   }
