@@ -24,7 +24,7 @@ export default class NotificationMessage {
       ${this.textMessage}
       </div>
     </div>
-  </div>`
+  </div>`;
   }
 
   show(targetElement = document.body) {
@@ -39,7 +39,7 @@ export default class NotificationMessage {
       if (thisNotificationObj === NotificationMessage.curNotificationObj) {
         thisNotificationObj.destroy();
       }
-    }, this.duration - 50, this); //-50 для более плавной анимации при удалении
+    }, this.duration, this); 
   }
 
   remove() {
