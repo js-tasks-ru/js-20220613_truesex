@@ -1,4 +1,6 @@
 export default class SortableTable {
+  subElements = {};
+
   constructor(headerConfig, {
     data = [],
     sorted = {},
@@ -36,20 +38,17 @@ export default class SortableTable {
     </div>`;
     this.element = wraper.firstElementChild;
     this.fillSubElements();
-    this.onHeaderFieldPointerDown = this.onHeaderFieldPointerDown.bind(this);
     this.subElements.header.addEventListener('pointerdown', this.onHeaderFieldPointerDown);
   }
 
-  fillSubElements() {
-    this.subElements = {};
+  fillSubElements() {    
     const allDataElem = this.element.querySelectorAll("[data-element]");
     for (const element of allDataElem) {
       this.subElements[element.dataset.element] = element;
     }
-
   }
 
-  onHeaderFieldPointerDown(event) {
+  onHeaderFieldPointerDown = (event) => {
     const curColElement = event.target.closest('div .sortable-table__cell');
     if (!(curColElement && curColElement.dataset.sortable === 'true')) {
       return;
