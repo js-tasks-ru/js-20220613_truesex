@@ -4,10 +4,7 @@ class Tooltip {
     if (Tooltip.curTooltip) {
       return Tooltip.curTooltip;
     }
-    else {
-      Tooltip.curTooltip = this;
-    }
-    this.initialize();
+    Tooltip.curTooltip = this;   
   }
 
   render = (tooltipText) => {
@@ -44,6 +41,7 @@ class Tooltip {
     this.element = wraper.firstElementChild;
     document.addEventListener('pointerover', this.onPointerOver);
     document.addEventListener('pointerout', this.onPointerOut);
+    
   }
 
   destroy() {
@@ -53,6 +51,7 @@ class Tooltip {
     }
     document.removeEventListener('pointerover', this.onPointerOver);
     document.removeEventListener('pointerout', this.onPointerOut);
+    document.removeEventListener('pointermove', this.onPointerMove);
   }
 }
 
