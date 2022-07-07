@@ -41,7 +41,7 @@ class Tooltip {
     this.element = wraper.firstElementChild;
     document.addEventListener('pointerover', this.onPointerOver);
     document.addEventListener('pointerout', this.onPointerOut);
-    document.addEventListener('pointermove', this.onPointerMove);
+    
   }
 
   destroy() {
@@ -51,6 +51,7 @@ class Tooltip {
     }
     document.removeEventListener('pointerover', this.onPointerOver);
     document.removeEventListener('pointerout', this.onPointerOut);
+    document.removeEventListener('pointermove', this.onPointerMove);
   }
 }
 
