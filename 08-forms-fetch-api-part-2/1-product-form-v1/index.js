@@ -184,8 +184,7 @@ export default class ProductForm {
   }
 
   uploadFile = async (event) => {
-    //console.log(event);  
-
+     
     try {
       const response = await fetchJson(this.urlImgService, {
         method: 'POST',
