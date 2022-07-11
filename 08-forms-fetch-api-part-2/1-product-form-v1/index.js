@@ -9,11 +9,11 @@ export default class ProductForm {
   keyFields = [
     {
       name: 'title',
-      value: (item) => item.value
+      value: (item) => escapeHtml(item.value)
     },
     {
       name: 'description',
-      value: (item) => item.value
+      value: (item) => escapeHtml(item.value)
     },
     {
       name: 'subcategory',
@@ -203,8 +203,13 @@ export default class ProductForm {
 
   }
 
-  submitForm = async (event) => {
+  submitForm = (event) => {
     event.preventDefault();
+
+    this.save();
+  }
+
+  async save() {
 
     //заполняем ключевые поля отправки из формы
     this.keyFields.forEach(item => {
@@ -221,18 +226,14 @@ export default class ProductForm {
           "Content-type": 'application/json'
         }
       });
-      this.save();
+      this.element.dispatchEvent(new Event((this.data.id) ? 'product-updated' : 'product-saved'));
       
       this.data.id = response.id;
 
     } catch (error) {
       console.log(error);
     }
-
-  }
-
-  save() {
-    this.element.dispatchEvent(new Event((this.data.id) ? 'product-updated' : 'product-saved'));
+    
   }
 
   destroy() {
