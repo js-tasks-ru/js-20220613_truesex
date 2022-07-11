@@ -211,7 +211,6 @@ export default class ProductForm {
       const curItem = this.subElements.productForm.elements[item.name];
       this.data[item.name] = item.value(curItem);
     });
-    //массив изображений модифицируется "налету"
 
     const method = (this.data.id) ? 'PATCH' : 'PUT';
     try {
@@ -248,6 +247,7 @@ export default class ProductForm {
   }
 
   fillFormData(data) {
+
     if (!data || !data.length) {
       return;
     }
@@ -263,7 +263,6 @@ export default class ProductForm {
 
   }
 
-
   async render() {
 
     let categories, data;
@@ -277,5 +276,6 @@ export default class ProductForm {
     this.subElements.productForm.elements['subcategory'].innerHTML = this.getCategoryOptionsTemplate(categories);
     this.fillFormData(data);
     return this.element;
+
   }
 }
