@@ -26,7 +26,11 @@ export default class SortableTable {
   destroy() {
     this.element.remove();
     this.subElements = null;
+<<<<<<< HEAD
     if(!this.isSortLocally) {
+=======
+    if (!this.isSortLocally) {
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
       window.removeEventListener('scroll', this.onWindowScroll);
     }
   }
@@ -56,12 +60,17 @@ export default class SortableTable {
     </div>`;
     this.element = wraper.firstElementChild;
     this.fillSubElements();
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
     if (this.sorted.id) {
       this.render();
     }
 
     this.subElements.header.addEventListener('pointerdown', this.onHeaderFieldPointerDown);
+<<<<<<< HEAD
     if(!this.isSortLocally) {
       window.addEventListener('scroll', this.onWindowScroll);  
     }
@@ -116,6 +125,62 @@ export default class SortableTable {
 
   }
 
+=======
+    if (!this.isSortLocally) {
+      window.addEventListener('scroll', this.onWindowScroll);
+    }
+
+  }
+
+  fillSubElements() {
+    const allDataElem = this.element.querySelectorAll("[data-element]");
+    for (const element of allDataElem) {
+      this.subElements[element.dataset.element] = element;
+    }
+  }
+
+  onWindowScroll = () => {
+    const windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
+    if (windowRelativeBottom < (document.documentElement.clientHeight + 100) && !this.loading) {
+      this.loading = true;
+      this.sortOnServer(this.sorted.id, this.sorted.order).then(result => {
+        if (result.length) {
+          //Идея в том, чтобы не бросать серверу запросы, когда он вернул пустые данные. До пока пользователь не изменит значения фильтров(сортировки)
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  onHeaderFieldPointerDown = (event) => {
+    const curColElement = event.target.closest('div .sortable-table__cell');
+    if (!(curColElement && curColElement.dataset.sortable === 'true')) {
+      return;
+    }
+
+    if (this.sorted.id !== curColElement.dataset.id) {
+      this.sorted.id = curColElement.dataset.id;
+      curColElement.append(this.subElements.arrow);
+    }
+
+    const ord = {
+      asc: 'desc',
+      desc: 'asc'
+    };
+    this.sorted.order = ord[this.sorted.order]; //инверсия
+
+    if (!this.isSortLocally) {
+      this.data = []; //очищаем данные
+      this.loading = false; //признак "загрузка данных"
+      this.subElements.body.innerHTML = ''; //очищаем содержимое таблицы
+    }
+
+    curColElement.setAttribute('data-order', this.sorted.order);
+    this.render();
+
+  }
+
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
   getTableHeaderHTML() {
     const arrowSortText = `<span data-element="arrow" class="sortable-table__sort-arrow">
       <span class="sort-arrow"></span>
@@ -140,11 +205,19 @@ export default class SortableTable {
     if (this.isSortLocally) {
       this.sortOnClient(this.sorted.id, this.sorted.order);
       this.subElements.body.innerHTML = this.getTableHTML();
+<<<<<<< HEAD
       return this.data; 
     } else {
 
       return this.sortOnServer(this.sorted.id, this.sorted.order);
       
+=======
+      return this.data;
+    } else {
+
+      return this.sortOnServer(this.sorted.id, this.sorted.order);
+
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
     }
 
   }
@@ -171,13 +244,18 @@ export default class SortableTable {
     url.searchParams.set('_sort', fieldValue);
     url.searchParams.set('_order', orderValue);
     url.searchParams.set('_start', curDataLength);
+<<<<<<< HEAD
     url.searchParams.set('_end', curDataLength+this.serverPortionSize);
+=======
+    url.searchParams.set('_end', curDataLength + this.serverPortionSize);
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
 
     //отображаем индикатор загрузки
     this.subElements.loading.style.display = "block";
     let result = [];
     try {
 
+<<<<<<< HEAD
       result = await fetchJson(url);  
       
       if(result.length) {
@@ -190,6 +268,20 @@ export default class SortableTable {
     }
     //отображаем сообщение "нет данных"
     this.subElements.emptyPlaceholder.style.display = (!result && !this.data) ? "block": "none";
+=======
+      result = await fetchJson(url);
+
+      if (result.length) {
+        this.data = [...this.data, ...result];
+        this.subElements.body.insertAdjacentHTML('beforeend', this.getTableHTML(result));
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+    //отображаем сообщение "нет данных"
+    this.subElements.emptyPlaceholder.style.display = (!result && !this.data) ? "block" : "none";
+>>>>>>> 00adb72c1fe891d73a0816a5239653f04f36e550
     //скрываем индикатор загрузки
     this.subElements.loading.style.display = "none";
     return result;
