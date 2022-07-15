@@ -26,7 +26,6 @@ export default class SortableList {
         }
 
         const direction = droppableBelow.getBoundingClientRect().top > this.placeholderElement.getBoundingClientRect().top ? 'after' : 'before';
-        //this.placeholderElement.remove();
         droppableBelow[direction](this.placeholderElement);
 
     }
