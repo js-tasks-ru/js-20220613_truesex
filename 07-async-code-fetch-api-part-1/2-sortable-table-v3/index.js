@@ -26,7 +26,7 @@ export default class SortableTable {
   destroy() {
     this.element.remove();
     this.subElements = null;
-    if (!this.isSortLocally) {
+    if(!this.isSortLocally) {
       window.removeEventListener('scroll', this.onWindowScroll);
     }
   }
@@ -56,16 +56,16 @@ export default class SortableTable {
     </div>`;
     this.element = wraper.firstElementChild;
     this.fillSubElements();
-
+    
     if (this.sorted.id) {
       this.render();
     }
 
     this.subElements.header.addEventListener('pointerdown', this.onHeaderFieldPointerDown);
-    if (!this.isSortLocally) {
-      window.addEventListener('scroll', this.onWindowScroll);
+    if(!this.isSortLocally) {
+      window.addEventListener('scroll', this.onWindowScroll);  
     }
-
+    
   }
 
   fillSubElements() {
@@ -75,14 +75,14 @@ export default class SortableTable {
     }
   }
 
-  onWindowScroll = () => {
-    const windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
+  onWindowScroll = (event) => {
+    const windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;  
     if (windowRelativeBottom < (document.documentElement.clientHeight + 100) && !this.loading) {
       this.loading = true;
       this.sortOnServer(this.sorted.id, this.sorted.order).then(result => {
-        if (result.length) {
+        if(result.length) {
           //Идея в том, чтобы не бросать серверу запросы, когда он вернул пустые данные. До пока пользователь не изменит значения фильтров(сортировки)
-          this.loading = false;
+          this.loading = false; 
         }
       });
     }
@@ -105,7 +105,7 @@ export default class SortableTable {
     };
     this.sorted.order = ord[this.sorted.order]; //инверсия
 
-    if (!this.isSortLocally) {
+    if(!this.isSortLocally) {
       this.data = []; //очищаем данные
       this.loading = false; //признак "загрузка данных"
       this.subElements.body.innerHTML = ''; //очищаем содержимое таблицы
@@ -140,11 +140,11 @@ export default class SortableTable {
     if (this.isSortLocally) {
       this.sortOnClient(this.sorted.id, this.sorted.order);
       this.subElements.body.innerHTML = this.getTableHTML();
-      return this.data;
+      return this.data; 
     } else {
 
       return this.sortOnServer(this.sorted.id, this.sorted.order);
-
+      
     }
 
   }
@@ -171,28 +171,29 @@ export default class SortableTable {
     url.searchParams.set('_sort', fieldValue);
     url.searchParams.set('_order', orderValue);
     url.searchParams.set('_start', curDataLength);
-    url.searchParams.set('_end', curDataLength + this.serverPortionSize);
+    url.searchParams.set('_end', curDataLength+this.serverPortionSize);
 
     //отображаем индикатор загрузки
     this.subElements.loading.style.display = "block";
     let result = [];
     try {
 
-      result = await fetchJson(url);
-
-      if (result.length) {
+      result = await fetchJson(url);  
+      
+      if(result.length) {
         this.data = [...this.data, ...result];
-        this.subElements.body.insertAdjacentHTML('beforeend', this.getTableHTML(result));
+        this.subElements.body.insertAdjacentHTML('beforeend', this.getTableHTML(result)); 
       }
-
+         
     } catch (error) {
-      console.log(error);
+      console.log(error);  //видимо...что-то случилось 
     }
     //отображаем сообщение "нет данных"
-    this.subElements.emptyPlaceholder.style.display = (!result && !this.data) ? "block" : "none";
+    this.subElements.emptyPlaceholder.style.display = (!result && !this.data) ? "block": "none";
     //скрываем индикатор загрузки
     this.subElements.loading.style.display = "none";
     return result;
 
   }
 }
+
