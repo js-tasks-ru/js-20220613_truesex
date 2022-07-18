@@ -9,6 +9,17 @@ export default class SortableList {
     this.init();
   }
 
+  getIndexOfList(node) {
+    let index = 0;
+    for (const iterator of node.parentElement.children) {
+      if (iterator === node) {
+        break;
+      }
+      index += 1;
+    }
+    return index;
+  }
+
   onPointerMove = event => {
     const {
       element: draggableElement,
@@ -38,11 +49,23 @@ export default class SortableList {
 
   onDraggableElementointerUp = () => {
 
-    const draggableElement = this.curDraggableElement.element;
+    const {
+      element: draggableElement,
+      index: indexBefore
+    } = this.curDraggableElement;
     draggableElement.removeAttribute('style');
     draggableElement.classList.toggle('sortable-list__item_dragging');
     this.placeholderElement.replaceWith(draggableElement);
 
+    const indexAfter = this.getIndexOfList(draggableElement);
+    if (indexBefore !== indexAfter) {
+      this.element.dispatchEvent(new CustomEvent('sortlist-change', {
+        detail: {
+          "indexBefore": indexBefore,
+          "indexAfter": indexAfter
+        }
+      }));
+    }
 
     draggableElement.removeEventListener('pointerup', this.onDraggableElementointerUp);
     document.removeEventListener('pointermove', this.onPointerMove);
@@ -50,7 +73,14 @@ export default class SortableList {
 
   onPointerDown = event => {
     if (event.target.hasAttribute('data-delete-handle')) {
-      event.target.closest('li').remove();
+      const curListItem = event.target.closest('li');
+      this.element.dispatchEvent(new CustomEvent('sortlist-change', {
+        detail: {
+          "indexBefore": this.getIndexOfList(curListItem),
+          "indexAfter": -1
+        }
+      }));
+      curListItem.remove();
       return;
     }
 
@@ -66,6 +96,8 @@ export default class SortableList {
     } = this.curDraggableElement.element.getBoundingClientRect();
     this.curDraggableElement.shiftX = event.clientX - left;
     this.curDraggableElement.shiftY = event.clientY - top;
+
+    this.curDraggableElement.index = this.getIndexOfList(this.curDraggableElement.element);
 
     const {
       element: draggableElement,
@@ -84,13 +116,6 @@ export default class SortableList {
   }
 
   init() {
-
-    this.listItems.forEach(item => {
-      item.classList.toggle('sortable-list__item');
-      item.ondragstart = function () {
-        return false;
-      };
-    });
 
     this.placeholderElement = document.createElement('li');
     this.placeholderElement.classList.add('sortable-list__item');

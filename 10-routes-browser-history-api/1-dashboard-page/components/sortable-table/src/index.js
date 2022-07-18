@@ -15,7 +15,7 @@ export default class SortableTable {
     const { bottom } = this.element.getBoundingClientRect();
     const { id, order } = this.sorted;
 
-    if (bottom < document.documentElement.clientHeight && !this.loading && !this.sortLocally) {
+    if (bottom < document.documentElement.clientHeight && !this.loading && !this.isSortLocally) {
       this.start = this.end;
       this.end = this.start + this.step;
 
@@ -68,7 +68,8 @@ export default class SortableTable {
     isSortLocally = false,
     step = 20,
     start = 1,
-    end = start + step
+    end = start + step,
+    range
   } = {}) {
 
     this.headersConfig = headersConfig;
@@ -78,6 +79,7 @@ export default class SortableTable {
     this.step = step;
     this.start = start;
     this.end = end;
+    this.range = range;
 
     this.render();
   }
@@ -104,6 +106,11 @@ export default class SortableTable {
     this.url.searchParams.set('_order', order);
     this.url.searchParams.set('_start', start);
     this.url.searchParams.set('_end', end);
+
+    if(this.range) {
+      this.url.searchParams.set('from', this.range.from.toISOString());
+      this.url.searchParams.set('to', this.range.to.toISOString());
+    }
 
     this.element.classList.add('sortable-table_loading');
 
